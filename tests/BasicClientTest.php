@@ -1,6 +1,7 @@
 <?php
 
 use Moaction\Jsonrpc\ClientBasic;
+use Moaction\Jsonrpc\Transport\Response;
 use Moaction\Jsonrpc\Transport\Request;
 
 class BasicClientTest extends PHPUnit_Framework_TestCase {
@@ -10,10 +11,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testCall($request, $expected) {
 		/** @var PHPUnit_Framework_MockObject_MockObject|ClientBasic $client */
-		$client = $this->getMockBuilder('\Moaction\Jsonrpc\ClientBasic')
-			->setMethods(array('send', 'prepareResponse'))
-			->disableOriginalConstructor()
-			->getMock();
+		$client = $this->getClientMock(array('send', 'prepareResponse'));
 
 		$data = 'testResult';
 		$client->expects($this->any())
@@ -31,6 +29,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 			$this->setExpectedException('\InvalidArgumentException');
 		}
 
+		/** @see Moaction\Jsonrpc\ClientBasic::call */
 		$result = call_user_func_array(array($client, 'call'), $request);
 		$this->assertEquals($response, $result);
 	}
@@ -60,6 +59,72 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 			array(
 				array($request1, $request2),
 				'[{"jsonrpc":"2.0","method":"method1","params":{"param1":"value1"},"id":2},{"jsonrpc":"2.0","method":"method2"}]'
+			),
+		);
+	}
+
+	/**
+	 * @param array $methods
+	 * @return PHPUnit_Framework_MockObject_MockObject|ClientBasic
+	 */
+	public function getClientMock($methods)
+	{
+		$client = $this->getMockBuilder('\Moaction\Jsonrpc\ClientBasic')
+			->setMethods($methods)
+			->disableOriginalConstructor()
+			->getMock();
+		return $client;
+	}
+
+	/**
+	 * @covers Moaction\Jsonrpc\ClientBasic::prepareResponse
+	 * @dataProvider providerTestPrepareResponse
+	 */
+	public function testPrepareResponse($data, $expected)
+	{
+		$clientMock = $this->getClientMock(array('getResponse'));
+		$clientMock->expects($this->any())
+			->method('getResponse')
+			->will($this->returnCallback(function($arg) {
+				$response = new Response();
+				$response->setId($arg->id);
+				return $response;
+			}));
+
+		$class = new \ReflectionClass($clientMock);
+		$method = $class->getMethod('prepareResponse');
+		$method->setAccessible(true);
+
+		if (!$expected) {
+			$this->setExpectedException('\Moaction\Jsonrpc\Exception');
+		}
+
+		/** @see Moaction\Jsonrpc\ClientBasic::prepareResponse */
+		$result =  $method->invoke($clientMock, $data);
+
+		$this->assertEquals($expected, $result);
+	}
+
+	public function providerTestPrepareResponse()
+	{
+		$response1 = new Response();
+		$response1->setId(1);
+
+		$response2 = new Response();
+		$response2->setId(4);
+
+		return array(
+			'Invalid json' => array(
+				'invalidJson{}',
+				false,
+			),
+			'Single response' => array(
+				'{"id": 1}',
+				$response1,
+			),
+			'Multi response' => array(
+				'[{"id": 1}, {"id": 4}]',
+				array(1 => $response1, 4 => $response2),
 			),
 		);
 	}

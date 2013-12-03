@@ -3,6 +3,7 @@
 namespace Moaction\Jsonrpc;
 
 use Moaction\Jsonrpc\Transport\Request;
+use Moaction\Jsonrpc\Transport\Response;
 
 interface ClientInterface
 {

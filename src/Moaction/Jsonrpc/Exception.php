@@ -2,5 +2,6 @@
 
 namespace Moaction\Jsonrpc;
 
-class Exception extends \Exception {
+class Exception extends \Exception
+{
 }

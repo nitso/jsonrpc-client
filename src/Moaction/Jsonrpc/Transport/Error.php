@@ -5,14 +5,15 @@
  * Time: 13:45
  */
 
-namespace Moaction\Jsonrpc;
+namespace Moaction\Jsonrpc\Transport;
 
-class Error {
-	const ERROR_PARSE_ERROR      = -32700;
-	const ERROR_INVALID_REQUEST  = -32600;
+class Error
+{
+	const ERROR_PARSE_ERROR = -32700;
+	const ERROR_INVALID_REQUEST = -32600;
 	const ERROR_METHOD_NOT_FOUND = -32601;
-	const ERROR_INVALID_PARAMS   = -32602;
-	const ERROR_INTERNAL_ERROR   = -32603;
+	const ERROR_INVALID_PARAMS = -32602;
+	const ERROR_INTERNAL_ERROR = -32603;
 	/**
 	 * @var int
 	 */
@@ -33,7 +34,8 @@ class Error {
 	 * @param string $message
 	 * @param null $data
 	 */
-	public function __construct($code, $message, $data = null) {
+	public function __construct($code = null, $message = null, $data = null)
+	{
 		$this->code = $code;
 		$this->message = $message;
 		$this->data = $data;
@@ -63,5 +65,12 @@ class Error {
 		return $this->message;
 	}
 
-
+	public static function fromArray(array $data)
+	{
+		return new self(
+			!empty($data['code']) ? (int)$data['code'] : null,
+			!empty($data['message']) ? $data['message'] : null,
+			!empty($data['data']) ? $data['data'] : null
+		);
+	}
 } 

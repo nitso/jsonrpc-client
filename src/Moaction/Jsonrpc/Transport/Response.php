@@ -1,8 +1,11 @@
 <?php
 
-namespace Moaction\Jsonrpc;
+namespace Moaction\Jsonrpc\Transport;
 
-class Response {
+use Moaction\Jsonrpc\Exception;
+
+class Response
+{
 	/**
 	 * @var mixed
 	 */
@@ -34,6 +37,14 @@ class Response {
 	public function getError()
 	{
 		return $this->error;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasError()
+	{
+		return !is_null($this->getError());
 	}
 
 	/**
@@ -74,10 +85,39 @@ class Response {
 
 	/**
 	 * @param array $data
+	 * @throws Exception
 	 * @return self
 	 */
 	public static function fromArray($data)
 	{
+		if (empty($data['jsonrpc']) || $data['jsonrpc'] != Request::VERSION) {
+			throw new Exception('Request is not valid JsonRPC request: missing version');
+		}
 
+		$response = new self();
+
+		if (!empty($data['error'])) {
+			$response->setError(static::getErrorObject($data['error']));
+		} else {
+			if (empty($data['result'])) {
+				throw new Exception('Request is not valid JsonRPC request: missing result');
+			}
+			$response->setResult($data['result']);
+		}
+		if (empty($data['id'])) {
+			throw new Exception('Request is not valid JsonRPC request: missing id');
+		}
+		$response->setId($data['id']);
+
+		return $response;
+	}
+
+	/**
+	 * @param $data
+	 * @return Error
+	 */
+	protected static function getErrorObject($data)
+	{
+		return Error::fromArray($data);
 	}
 }

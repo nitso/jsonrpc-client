@@ -3,6 +3,7 @@
 namespace Moaction\Jsonrpc;
 
 use Moaction\Jsonrpc\Transport\Request;
+use Moaction\Jsonrpc\Transport\Response;
 
 class ClientBasic extends ClientAbstract
 {
@@ -26,8 +27,7 @@ class ClientBasic extends ClientAbstract
 			}
 
 			$data = json_encode($data);
-		}
-		else {
+		} else {
 			$data = json_encode($request->toArray());
 		}
 
@@ -42,7 +42,7 @@ class ClientBasic extends ClientAbstract
 	 * @return string
 	 * @throws Exception
 	 */
-	protected  function send($content)
+	protected function send($content)
 	{
 		$streamOptions = array(
 			'http' => array(
@@ -66,6 +66,7 @@ class ClientBasic extends ClientAbstract
 	 * @param $data
 	 * @throws Exception
 	 * @return Response|Response[]
+	 * @link http://ya.ru
 	 */
 	protected function prepareResponse($data)
 	{
@@ -91,8 +92,6 @@ class ClientBasic extends ClientAbstract
 				return $response;
 			}
 		}
-
-		return null;
 	}
 
 	/**
