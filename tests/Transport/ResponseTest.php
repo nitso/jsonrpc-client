@@ -1,9 +1,4 @@
 <?php
-/**
- * User: nitso@yandex.ru
- * Date: 03.12.13
- * Time: 10:46
- */
 
 use Moaction\Jsonrpc\Transport\Error;
 use Moaction\Jsonrpc\Transport\Request;

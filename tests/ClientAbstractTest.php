@@ -1,12 +1,6 @@
 <?php
 use Moaction\Jsonrpc\ClientAbstract;
 
-/**
- * User: nitso@yandex.ru
- * Date: 03.12.13
- * Time: 11:43
- */
-
 class ClientAbstractTest extends PHPUnit_Framework_TestCase
 {
 	/**

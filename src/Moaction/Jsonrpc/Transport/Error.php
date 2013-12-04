@@ -1,9 +1,4 @@
 <?php
-/**
- * User: nitso@yandex.ru
- * Date: 02.12.13
- * Time: 13:45
- */
 
 namespace Moaction\Jsonrpc\Transport;
 

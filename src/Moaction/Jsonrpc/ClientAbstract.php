@@ -2,7 +2,6 @@
 
 namespace Moaction\Jsonrpc;
 
-
 abstract class ClientAbstract implements ClientInterface
 {
 	/**
