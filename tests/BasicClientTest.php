@@ -4,12 +4,14 @@ use Moaction\Jsonrpc\ClientBasic;
 use Moaction\Jsonrpc\Transport\Response;
 use Moaction\Jsonrpc\Transport\Request;
 
-class BasicClientTest extends PHPUnit_Framework_TestCase {
+class BasicClientTest extends PHPUnit_Framework_TestCase
+{
 	/**
-	 * @covers Moaction\Jsonrpc\ClientBasic::call
+	 * @covers       Moaction\Jsonrpc\ClientBasic::call
 	 * @dataProvider providerTestCall
 	 */
-	public function testCall($request, $expected) {
+	public function testCall($request, $expected)
+	{
 		/** @var PHPUnit_Framework_MockObject_MockObject|ClientBasic $client */
 		$client = $this->getClientMock(array('send', 'prepareResponse'));
 
@@ -73,11 +75,12 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 			->setMethods($methods)
 			->disableOriginalConstructor()
 			->getMock();
+
 		return $client;
 	}
 
 	/**
-	 * @covers Moaction\Jsonrpc\ClientBasic::prepareResponse
+	 * @covers       Moaction\Jsonrpc\ClientBasic::prepareResponse
 	 * @dataProvider providerTestPrepareResponse
 	 */
 	public function testPrepareResponse($data, $expected)
@@ -85,11 +88,16 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 		$clientMock = $this->getClientMock(array('getResponse'));
 		$clientMock->expects($this->any())
 			->method('getResponse')
-			->will($this->returnCallback(function($arg) {
-				$response = new Response();
-				$response->setId($arg->id);
-				return $response;
-			}));
+			->will(
+				$this->returnCallback(
+					function ($arg) {
+						$response = new Response();
+						$response->setId($arg->id);
+
+						return $response;
+					}
+				)
+			);
 
 		$class = new \ReflectionClass($clientMock);
 		$method = $class->getMethod('prepareResponse');
@@ -100,7 +108,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 		}
 
 		/** @see Moaction\Jsonrpc\ClientBasic::prepareResponse */
-		$result =  $method->invoke($clientMock, $data);
+		$result = $method->invoke($clientMock, $data);
 
 		$this->assertEquals($expected, $result);
 	}
@@ -114,7 +122,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 		$response2->setId(4);
 
 		return array(
-			'Invalid json' => array(
+			'Invalid json'    => array(
 				'invalidJson{}',
 				false,
 			),
@@ -122,7 +130,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase {
 				'{"id": 1}',
 				$response1,
 			),
-			'Multi response' => array(
+			'Multi response'  => array(
 				'[{"id": 1}, {"id": 4}]',
 				array(1 => $response1, 4 => $response2),
 			),

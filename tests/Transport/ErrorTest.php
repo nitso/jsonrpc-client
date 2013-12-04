@@ -7,7 +7,8 @@
 
 use Moaction\Jsonrpc\Transport\Error;
 
-class ErrorTest extends PHPUnit_Framework_TestCase {
+class ErrorTest extends PHPUnit_Framework_TestCase
+{
 	/**
 	 * @covers \Moaction\Jsonrpc\Transport\Error::__construct
 	 * @covers \Moaction\Jsonrpc\Transport\Error::getCode
@@ -27,11 +28,13 @@ class ErrorTest extends PHPUnit_Framework_TestCase {
 	 */
 	public function testFromArray()
 	{
-		$error = Error::fromArray(array(
-			'code' => 33,
-			'message' => 'Fake error',
-			'data' => array('id' => 16),
-		));
+		$error = Error::fromArray(
+			array(
+				'code'    => 33,
+				'message' => 'Fake error',
+				'data'    => array('id' => 16),
+			)
+		);
 
 		$this->assertEquals(33, $error->getCode());
 		$this->assertEquals('Fake error', $error->getMessage());
@@ -42,13 +45,15 @@ class ErrorTest extends PHPUnit_Framework_TestCase {
 	 * @param $code
 	 * @param $expected
 	 * @dataProvider providerTestIntErrorCode
-	 * @covers \Moaction\Jsonrpc\Transport\Error::fromArray
+	 * @covers       \Moaction\Jsonrpc\Transport\Error::fromArray
 	 */
 	public function testIntErrorCode($code, $expected)
 	{
-		$error = Error::fromArray(array(
-			'code' => $code,
-		));
+		$error = Error::fromArray(
+			array(
+				'code' => $code,
+			)
+		);
 		$this->assertEquals($expected, $error->getCode());
 	}
 

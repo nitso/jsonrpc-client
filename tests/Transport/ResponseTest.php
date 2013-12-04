@@ -13,17 +13,20 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 {
 	/**
 	 * @dataProvider providerTestWrongVersion
-	 * @covers \Moaction\Jsonrpc\Transport\Response::fromArray
+	 * @covers       \Moaction\Jsonrpc\Transport\Response::fromArray
 	 */
 	public function testWrongVersion($version, $expected)
 	{
 		if (!$expected) {
-			$this->setExpectedException('\Moaction\Jsonrpc\Exception', 'Request is not valid JsonRPC request: missing version');
+			$this->setExpectedException(
+				'\Moaction\Jsonrpc\Exception',
+				'Request is not valid JsonRPC request: missing version'
+			);
 		}
 
 		$data = array(
 			'result' => true,
-			'id' => 1,
+			'id'     => 1,
 		);
 		if ($version) {
 			$data['jsonrpc'] = $version;
@@ -39,13 +42,13 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	{
 		return array(
 			'Empty version' => array('', false),
-			'Bad version' => array('1', false),
-			'Good version' => array(Request::VERSION, true),
+			'Bad version'   => array('1', false),
+			'Good version'  => array(Request::VERSION, true),
 		);
 	}
 
 	/**
-	 * @covers \Moaction\Jsonrpc\Transport\Response::fromArray
+	 * @covers       \Moaction\Jsonrpc\Transport\Response::fromArray
 	 * @dataProvider providerTestWrongId
 	 */
 	public function testWrongId($id, $expected)
@@ -59,7 +62,10 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 		}
 
 		if (!$expected) {
-			$this->setExpectedException('\Moaction\Jsonrpc\Exception', 'Request is not valid JsonRPC request: missing id');
+			$this->setExpectedException(
+				'\Moaction\Jsonrpc\Exception',
+				'Request is not valid JsonRPC request: missing id'
+			);
 		}
 
 		Response::fromArray($data);
@@ -83,10 +89,13 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	{
 		$data = array(
 			'jsonrpc' => Request::VERSION,
-			'id' => 1
+			'id'      => 1
 		);
 
-		$this->setExpectedException('\Moaction\Jsonrpc\Exception', 'Request is not valid JsonRPC request: missing result');
+		$this->setExpectedException(
+			'\Moaction\Jsonrpc\Exception',
+			'Request is not valid JsonRPC request: missing result'
+		);
 		Response::fromArray($data);
 	}
 
@@ -97,8 +106,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	{
 		$data = array(
 			'jsonrpc' => Request::VERSION,
-			'id' => 5,
-			'result' => array('Hello world'),
+			'id'      => 5,
+			'result'  => array('Hello world'),
 		);
 
 		$response = Response::fromArray($data);
@@ -113,8 +122,8 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 	{
 		$data = array(
 			'jsonrpc' => Request::VERSION,
-			'id' => 5,
-			'error' => array('123'),
+			'id'      => 5,
+			'error'   => array('123'),
 		);
 
 		$error = new Error('123');
@@ -155,7 +164,7 @@ class ResponseTest extends PHPUnit_Framework_TestCase
 
 	/**
 	 * @dataProvider providerTestHasError
-	 * @covers \Moaction\Jsonrpc\Transport\Response::hasError
+	 * @covers       \Moaction\Jsonrpc\Transport\Response::hasError
 	 */
 	public function testHasError($error)
 	{

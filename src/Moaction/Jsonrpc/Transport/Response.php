@@ -28,6 +28,7 @@ class Response
 	public function setError(Error $error)
 	{
 		$this->error = $error;
+
 		return $this;
 	}
 
@@ -54,6 +55,7 @@ class Response
 	public function setId($id)
 	{
 		$this->id = $id;
+
 		return $this;
 	}
 
@@ -72,6 +74,7 @@ class Response
 	public function setResult($result)
 	{
 		$this->result = $result;
+
 		return $this;
 	}
 
@@ -98,7 +101,8 @@ class Response
 
 		if (!empty($data['error'])) {
 			$response->setError(static::getErrorObject($data['error']));
-		} else {
+		}
+		else {
 			if (empty($data['result'])) {
 				throw new Exception('Request is not valid JsonRPC request: missing result');
 			}

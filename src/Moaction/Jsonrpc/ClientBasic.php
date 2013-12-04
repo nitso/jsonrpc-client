@@ -27,11 +27,13 @@ class ClientBasic extends ClientAbstract
 			}
 
 			$data = json_encode($data);
-		} else {
+		}
+		else {
 			$data = json_encode($request->toArray());
 		}
 
 		$result = $this->send($data);
+
 		return $this->prepareResponse($result);
 	}
 

@@ -7,7 +7,8 @@ use Moaction\Jsonrpc\ClientAbstract;
  * Time: 11:43
  */
 
-class ClientAbstractTest extends PHPUnit_Framework_TestCase {
+class ClientAbstractTest extends PHPUnit_Framework_TestCase
+{
 	/**
 	 * @covers \Moaction\Jsonrpc\ClientAbstract::__construct
 	 * @covers \Moaction\Jsonrpc\ClientAbstract::getServerUrl

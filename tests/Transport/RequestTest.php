@@ -10,7 +10,7 @@ use Moaction\Jsonrpc\Transport\Request;
 class RequestTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers \Moaction\Jsonrpc\Transport\Request::toArray
+	 * @covers       \Moaction\Jsonrpc\Transport\Request::toArray
 	 * @dataProvider providerTestToArray
 	 */
 	public function testToArray(Request $request, $expected)
@@ -37,20 +37,20 @@ class RequestTest extends PHPUnit_Framework_TestCase
 
 		return array(
 			'Missing method' => array($emptyRequest, false),
-			'Some request' => array(
+			'Some request'   => array(
 				$someRequest,
 				array(
 					'jsonrpc' => Request::VERSION,
-					'method' => 'testMethod',
+					'method'  => 'testMethod',
 				),
 			),
-			'Full request' => array(
+			'Full request'   => array(
 				$fullRequest,
 				array(
 					'jsonrpc' => Request::VERSION,
-					'method' => 'testMethod',
-					'id' => 10,
-					'params' => array('param' => 'value'),
+					'method'  => 'testMethod',
+					'id'      => 10,
+					'params'  => array('param' => 'value'),
 				),
 			)
 		);

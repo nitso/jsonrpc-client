@@ -28,6 +28,7 @@ class Request
 	public function setId($id)
 	{
 		$this->id = (int)$id;
+
 		return $this;
 	}
 
@@ -46,6 +47,7 @@ class Request
 	public function setMethod($method)
 	{
 		$this->method = $method;
+
 		return $this;
 	}
 
@@ -64,6 +66,7 @@ class Request
 	public function setParams(array $params)
 	{
 		$this->params = $params;
+
 		return $this;
 	}
 
