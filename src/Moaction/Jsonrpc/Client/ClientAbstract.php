@@ -1,6 +1,6 @@
 <?php
 
-namespace Moaction\Jsonrpc;
+namespace Moaction\Jsonrpc\Client;
 
 abstract class ClientAbstract implements ClientInterface
 {

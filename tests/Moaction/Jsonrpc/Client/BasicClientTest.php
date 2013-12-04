@@ -1,13 +1,13 @@
 <?php
 
-use Moaction\Jsonrpc\ClientBasic;
-use Moaction\Jsonrpc\Transport\Response;
-use Moaction\Jsonrpc\Transport\Request;
+use Moaction\Jsonrpc\Client\ClientBasic;
+use Moaction\Jsonrpc\Common\Response;
+use Moaction\Jsonrpc\Common\Request;
 
 class BasicClientTest extends PHPUnit_Framework_TestCase
 {
 	/**
-	 * @covers       Moaction\Jsonrpc\ClientBasic::call
+	 * @covers       Moaction\Jsonrpc\Client\ClientBasic::call
 	 * @dataProvider providerTestCall
 	 */
 	public function testCall($request, $expected)
@@ -71,7 +71,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase
 	 */
 	public function getClientMock($methods)
 	{
-		$client = $this->getMockBuilder('\Moaction\Jsonrpc\ClientBasic')
+		$client = $this->getMockBuilder('\Moaction\Jsonrpc\Client\ClientBasic')
 			->setMethods($methods)
 			->disableOriginalConstructor()
 			->getMock();
@@ -80,7 +80,7 @@ class BasicClientTest extends PHPUnit_Framework_TestCase
 	}
 
 	/**
-	 * @covers       Moaction\Jsonrpc\ClientBasic::prepareResponse
+	 * @covers       Moaction\Jsonrpc\Client\ClientBasic::prepareResponse
 	 * @dataProvider providerTestPrepareResponse
 	 */
 	public function testPrepareResponse($data, $expected)
@@ -104,15 +104,18 @@ class BasicClientTest extends PHPUnit_Framework_TestCase
 		$method->setAccessible(true);
 
 		if (!$expected) {
-			$this->setExpectedException('\Moaction\Jsonrpc\Exception');
+			$this->setExpectedException('\Moaction\Jsonrpc\Common\Exception');
 		}
 
-		/** @see Moaction\Jsonrpc\ClientBasic::prepareResponse */
+		/** @see Moaction\Jsonrpc\Client\ClientBasic::prepareResponse */
 		$result = $method->invoke($clientMock, $data);
 
 		$this->assertEquals($expected, $result);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function providerTestPrepareResponse()
 	{
 		$response1 = new Response();

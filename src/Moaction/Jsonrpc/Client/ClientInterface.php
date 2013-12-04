@@ -1,9 +1,9 @@
 <?php
 
-namespace Moaction\Jsonrpc;
+namespace Moaction\Jsonrpc\Client;
 
-use Moaction\Jsonrpc\Transport\Request;
-use Moaction\Jsonrpc\Transport\Response;
+use Moaction\Jsonrpc\Common\Request;
+use Moaction\Jsonrpc\Common\Response;
 
 interface ClientInterface
 {
@@ -13,7 +13,7 @@ interface ClientInterface
 	public function __construct($serverUrl);
 
 	/**
-	 * @param \Moaction\Jsonrpc\Transport\Request $request
+	 * @param \Moaction\Jsonrpc\Common\Request $request
 	 * @return Response
 	 */
 	public function call(Request $request);

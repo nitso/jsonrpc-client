@@ -1,9 +1,10 @@
 <?php
 
-namespace Moaction\Jsonrpc;
+namespace Moaction\Jsonrpc\Client;
 
-use Moaction\Jsonrpc\Transport\Request;
-use Moaction\Jsonrpc\Transport\Response;
+use Moaction\Jsonrpc\Common\Exception;
+use Moaction\Jsonrpc\Common\Request;
+use Moaction\Jsonrpc\Common\Response;
 
 class ClientBasic extends ClientAbstract
 {
