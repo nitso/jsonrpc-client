@@ -103,6 +103,6 @@ class ClientBasic extends ClientAbstract
 	 */
 	protected function getResponse($data)
 	{
-		return Response::fromArray($data);
+		return Response::fromArray((array)$data);
 	}
 }
