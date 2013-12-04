@@ -1,0 +1,22 @@
+{
+	"name": "moaction/jsonrpc-client",
+	"description": "Jsonrpc client php implementation",
+	"minimum-stability": "stable",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Alexey Kalinin",
+			"email": "nitso@yandex.ru"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3",
+		"psr/log": "1.0.0"
+	},
+	"require-dev": {
+		"phpunit/phpunit": "3.7.*"
+	},
+	"autoload": {
+		"psr-0": {"Moaction\\": "src/"}
+	}
+}
