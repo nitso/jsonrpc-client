@@ -8,33 +8,28 @@ use Moaction\Jsonrpc\Common\Response;
 
 class ClientBasic extends ClientAbstract
 {
-	protected $request;
+	/**
+	 * @var bool
+	 */
+	private $returnArrayResponse;
+
+	/**
+	 * @inheritdoc
+	 * @param bool $returnArrayResponse second flag while json_decoding response
+	 */
+	public function __construct($serverUrl, $returnArrayResponse = true)
+	{
+		$this->returnArrayResponse = $returnArrayResponse;
+		parent::__construct($serverUrl);
+	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function call(Request $request)
 	{
-		$args = func_get_args();
-		if (count($args) > 1) {
-			$data = array();
-
-			foreach ($args as $arg) {
-				if (!$arg instanceof Request) {
-					throw new \InvalidArgumentException('Request argument must be of type \Moaction\Jsonrpc\Request');
-				}
-
-				$data[] = $arg->toArray();
-			}
-
-			$data = json_encode($data);
-		}
-		else {
-			$data = json_encode($request->toArray());
-		}
-
+		$data = json_encode($request->toArray());
 		$result = $this->send($data);
-
 		return $this->prepareResponse($result);
 	}
 
@@ -73,28 +68,10 @@ class ClientBasic extends ClientAbstract
 	 */
 	protected function prepareResponse($data)
 	{
-		if (!$data = json_decode($data)) {
-			throw new Exception('Invalid server response.');
+		if (!$data = json_decode($data, $this->returnArrayResponse)) {
+			throw new Exception('Invalid server response. Json decoding error.');
 		}
-
-		// handle batch response array
-		if (is_array($data)) {
-			$responses = array();
-			foreach ($data as $r) {
-				if ($response = $this->getResponse($r)) {
-					$responses[$response->getId()] = $response;
-				}
-			}
-
-			if (count($responses)) {
-				return $responses;
-			}
-		}
-		else {
-			if ($response = $this->getResponse($data)) {
-				return $response;
-			}
-		}
+		return $this->getResponse($data);
 	}
 
 	/**
@@ -104,5 +81,52 @@ class ClientBasic extends ClientAbstract
 	protected function getResponse($data)
 	{
 		return Response::fromArray((array)$data);
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function batch(array $requests)
+	{
+		if (!$requests) {
+			throw new \InvalidArgumentException('Empty request');
+		}
+
+		$data = array();
+
+		foreach ($requests as $request) {
+			if (!$request instanceof Request) {
+				throw new \InvalidArgumentException('Invalid request params. Array of `Request` objects expected');
+			}
+
+			$data[] = $request->toArray();
+		}
+
+		$result = $this->send(json_encode($data, $this->returnArrayResponse));
+		return $this->prepareBatchResponse($result);
+	}
+
+	/**
+	 * @param string $data
+	 * @return Response[]
+	 * @throws Exception
+	 */
+	protected function prepareBatchResponse($data)
+	{
+		if (!$results = json_decode($data, $this->returnArrayResponse)) {
+			throw new Exception('Invalid server response. Json decoding error.');
+		}
+
+		if (!is_array($results)) {
+			throw new Exception('Invalid server response. Array expected.');
+		}
+
+		$responses = array();
+		foreach ($results as $result) {
+			$response = $this->getResponse($result);
+			$responses[$response->getId()] = $response;
+		}
+
+		return $responses;
 	}
 }

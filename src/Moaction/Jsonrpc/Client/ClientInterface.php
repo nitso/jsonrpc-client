@@ -17,4 +17,10 @@ interface ClientInterface
 	 * @return Response
 	 */
 	public function call(Request $request);
+
+	/**
+	 * @param Request[] $requests
+	 * @return Response[]
+	 */
+	public function batch(array $requests);
 } 
